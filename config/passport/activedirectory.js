@@ -9,7 +9,7 @@ passport.deserializeUser(async function(id, done) {
   done(null, user);
 });
 passport.use(new ADStrategy(
-  adOpts,
+  adOpts.adopts,
   async function(profile, ad, done) {
     for (var i = 0;i < permissions.memberOf.length;i++) {
       let permKeys = Object.keys(permissions.memberOf[i]);
