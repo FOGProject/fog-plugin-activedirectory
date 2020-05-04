@@ -24,6 +24,7 @@ passport.use(new ADStrategy(
           user.permissions = {};
           user.permissions = _.merge(user.permissions, permissions);
           user.isADAuth = true;
+          user.displayName = user._json.dn.displayName || `${user.name.givenName} ${user.name.familyName}`;
           return done(null, user, {message: 'Login Successful'});
         });
       }
