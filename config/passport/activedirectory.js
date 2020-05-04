@@ -2,7 +2,6 @@ const passport = require('passport'),
   ADStrategy = require('passport-activedirectory'),
   adOpts = require('../local'),
   permissions = require('../permissions') || {};
-console.log(adOpts);
 passport.serializeUser(async function(user, done) {
   done(null, user);
 });
