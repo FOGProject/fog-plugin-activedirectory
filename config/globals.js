@@ -1,5 +1,5 @@
 module.exports.globals = {
-  authentiationMechanisms: [
+  authenticationMechanisms: [
     'ActiveDirectory'
   ]
 };
