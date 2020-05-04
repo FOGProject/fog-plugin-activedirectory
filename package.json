@@ -1,0 +1,22 @@
+{
+  "bundleDependencies": false,
+  "dependencies": {
+    "passport-activedirectory": "^1.0.4",
+    "sails-util-micro-apps": "github:fogproject/sails-util-micro-apps"
+  },
+  "deprecated": false,
+  "description": "An activedirectory plugin for fog 2.0",
+  "fog": {
+    "isPlugin": true
+  },
+  "main": "index.js",
+  "name": "fog-plugin-activedirectory",
+  "private": true,
+  "sails": {
+    "isHook": true
+  },
+  "scripts": {
+    "test": "node ../node_modules/mocha/bin/mocha test/**/*.test.js"
+  },
+  "version": "0.0.1"
+}
