@@ -1,7 +1,7 @@
 const passport = require('passport'),
   ADStrategy = require('passport-activedirectory'),
-  adOpts = require('../local'),
-  permissions = require('../permissions') || {};
+  adOpts = require('../adopts'),
+  adperms = require('../adperms') || {};
 passport.serializeUser(async function(user, done) {
   done(null, user);
 });
@@ -18,7 +18,8 @@ passport.use(new ADStrategy(
           let user = profile;
           if (err) return done(err);
           if (!isMember) continue;
-          user.permissions = _.extend(user.permissions, permissions);
+          user.permissions = {};
+          user.permissions = _.merge(user.permissions, permissions, permissions.memberOf[permKeys[i]].permissions);
           user.isADAuth = true;
           return done(null, user, {message: 'Login Successful'});
         });
