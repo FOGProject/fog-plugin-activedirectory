@@ -13,20 +13,24 @@ passport.serializeUser(async (user, done) => {
 passport.deserializeUser(async (id, done) => {
   await Aduser.findOne({id}).populateAll().exec(async (err, user) => {
     if (err) return done(err);
-    done(null, user);
+    user = user.toJSON();
+    done(null, user, {message: 'User deserialized'});
   });
 });
 passport.use('ad-jwt-cookiecombo', new JWTStrategy(opts,
   async (jwt_payload, done) => {
+    sails.log.info(jwt_payload);
+    sails.log.info(jwt_payload.user);
     if (!jwt_payload) return done(null, false, {message: 'No token passed'});
     if (!jwt_payload.user) return done(null, false, {message: 'No user information present'});
     await Aduser.findOne({id: jwt_payload.user}).populateAll().exec(async (err, user) => {
+      sails.log.info(user);
+      user = user.toJSON();
+      sails.log.info(user);
       if (err) return done(err, false, {message: 'An error occurred locating the user'});
-      if (user) {
-        user.isADAuth = true;
-        user.isJWTAuth = true;
-      }
-      done(null, user);
+      if (!user) return done(null, false, {message: 'No AD user found'});
+      user = user.toJSON();
+      done(null, user, {message: 'JWT Auth verified'});
     });
   }
 ));
