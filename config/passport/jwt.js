@@ -19,8 +19,6 @@ passport.deserializeUser(async (id, done) => {
 });
 passport.use('ad-jwt-cookiecombo', new JWTStrategy(opts,
   async (jwt_payload, done) => {
-    sails.log.info(jwt_payload);
-    sails.log.info(jwt_payload.user);
     if (!jwt_payload) return done(null, false, {message: 'No token passed'});
     if (!jwt_payload.user) return done(null, false, {message: 'No user information present'});
     await Aduser.findOne({id: jwt_payload.user}).populateAll().exec(async (err, user) => {
