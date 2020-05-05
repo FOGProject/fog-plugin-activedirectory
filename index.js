@@ -1,4 +1,4 @@
-module.exports = function(sails) {
+module.exports = (sails) => {
   var loader = require('sails-util-micro-apps')(sails);
   // Load policies under ./api/policies and config under ./config
   loader.configure({
@@ -8,7 +8,7 @@ module.exports = function(sails) {
   });
 
   return {
-    initialize: function (next) {
+    initialize: (next) => {
       /**
        * Load helpers under ./api/helpers
        * Load controllers under ./api/controllers

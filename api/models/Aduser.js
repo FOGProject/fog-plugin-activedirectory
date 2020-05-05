@@ -6,7 +6,7 @@
  */
 const bcrypt = require('bcryptjs'),
   flatten = require('flat'),
-  filterPermissions = function(permissions) {
+  filterPermissions = (permissions) => {
     if (!permissions) permissions = {};
     let toValidate = flatten(permissions);
     // Filter out unknown permissions
@@ -18,9 +18,9 @@ const bcrypt = require('bcryptjs'),
     // by the 'left' object.
     return _.extend(sails.config.permissions, permissions);
   },
-  deepMap = function(obj, cb) {
+  deepMap = (obj, cb) => {
     let out = {};
-    Object.keys(obj).forEach(function(k) {
+    Object.keys(obj).forEach((k) => {
       let val;
       if (obj[k] !== null && typeof obj[k] === 'object') {
         val = deepMap(obj[k], cb);
@@ -46,15 +46,15 @@ module.exports = {
       collection: 'role'
     }
   },
-  customToJSON: function() {
-    concatRoles = function(roles, models) {
+  customToJSON: () => {
+    concatRoles = (roles, models) => {
       let permissions = {};
       if (roles === undefined) return {};
       if (models === undefined) models = Object.keys(sails.models);
       for (var i = 0; i < models.length; i++) {
         for (var j = 0; j < roles.length; j++) {
           if (roles[j].isAdmin) {
-            roles[j].permissions = deepMap(sails.config.permissions, function(v, k) {
+            roles[j].permissions = deepMap(sails.config.permissions, (v, k) => {
               return true;
             });
           } else {

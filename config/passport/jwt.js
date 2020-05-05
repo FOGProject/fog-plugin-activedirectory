@@ -25,9 +25,8 @@ passport.use('ad-jwt-cookiecombo', new JWTStrategy(opts,
       if (user) {
         user.isADAuth = true;
         user.isJWTAuth = true;
-        user = user.toJSON();
       }
-      done(null, user, {message: 'Login Successful'});
+      done(null, user);
     });
   }
 ));

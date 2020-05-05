@@ -9,11 +9,11 @@ before(function(done) {
       grunt: false
     },
     log: {level: 'error'}
-  }, function(err) {
+  }, (err) => {
     if (err) return done(err);
     done();
   });
 });
-after(function(done) {
+after((done) => {
   sails.lower(done);
 });

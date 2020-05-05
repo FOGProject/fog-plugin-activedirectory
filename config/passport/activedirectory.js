@@ -7,7 +7,7 @@ passport.serializeUser(async (user, done) => {
   done(null, user.id);
 });
 passport.deserializeUser(async (id, done) => {
-  await Aduser.findOne({id}).populateAll().exec(async function(err, user) {
+  await Aduser.findOne({id}).populateAll().exec(async (err, user) => {
     if (err) return done(err);
     done(null, user);
   });
@@ -38,9 +38,9 @@ permKeys.forEach(async (member) => {
           };
           await Aduser.findOrCreate({objectGuid: aduser.objectGuid}, aduser)
             .then((user) => {
-              sails.log.info(user);
-              user = user.toJSON();
-              sails.log.info(user);
+              if (user) {
+                user.isADAuth = true;
+              }
               return done(null, user, {message: 'Login Successful'});
             })
             .catch((err) => {
