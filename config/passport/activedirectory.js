@@ -3,6 +3,7 @@ const passport = require('passport'),
   adOpts = require('../adopts'),
   uuid = require('uuid'),
   adperms = require('../adperms');
+var userFound = false;
 passport.serializeUser(async (user, done) => {
   done(null, user.id);
 });
@@ -19,6 +20,9 @@ permKeys.forEach(async (member) => {
   await passport.use(new ADStrategy(
     adOpts.adopts,
     async (profile, ad, done) => {
+      if (userFound) {
+        return done(null, userFound, {message: 'Login Successful'});
+      }
       await Role.find({or: [{name: roleNames},{id: roleNames}]}, async (err, roles) => {
         if (err) return done(null, false, {message: err});
         for (var i = 0;i < roles.length;i++) {
@@ -26,20 +30,22 @@ permKeys.forEach(async (member) => {
         }
         await ad.isUserMemberOf(profile._json.dn, member, async (err, isMember) => {
           if (err) return done(err, false, {message: err});
-          if (isMember) {
-            let aduser = {
-              objectGuid: uuid.v4(profile._json.dn),
-              displayName: profile._json.displayName,
-              roles: roleIDs
-            };
-            await Aduser.findOrCreate({objectGuid: aduser.objectGuid}, aduser, async (err, user) => {
-              if (err) return done(err, false, {message: err});
-              if (user) user.isADAuth = true;
-              await Aduser.findOne({id: user.id}).populate('roles').exec(async (err, user) => {
-                done(null, user, {message: 'Login Successful'});
-              });
+          if (!isMember) return done(null, userFound, {message: 'Invalid Credentials'});
+          let aduser = {
+            objectGuid: uuid.v4(profile._json.dn),
+            displayName: profile._json.displayName,
+            roles: roleIDs
+          };
+          await Aduser.findOrCreate({objectGuid: aduser.objectGuid}, aduser, async (err, user) => {
+            if (err) return done(err, userFound, {message: err});
+            if (user) user.isADAuth = true;
+            await Aduser.findOne({id: user.id}).populate('roles').exec(async (err, user) => {
+              if (false === userFound) {
+                userFound = user;
+              }
+              done(null, userFound, {message: 'Login Successful'});
             });
-          }
+          });
         });
       });
     }

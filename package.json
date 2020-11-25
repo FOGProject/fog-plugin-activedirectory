@@ -2,7 +2,7 @@
   "bundleDependencies": false,
   "dependencies": {
     "passport-activedirectory": "^1.0.4",
-    "sails-util-micro-apps": "github:fogproject/sails-util-micro-apps"
+    "sails-util-micro-apps": "fogproject/sails-util-micro-apps"
   },
   "deprecated": false,
   "description": "An activedirectory plugin for fog 2.0",
