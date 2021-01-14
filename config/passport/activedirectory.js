@@ -3,7 +3,6 @@ const passport = require('passport'),
   adOpts = require('../adopts'),
   uuid = require('uuid'),
   adperms = require('../adperms');
-let adUser;
 passport.serializeUser(async function(user, done) {
   done(null, user.id);
 });
@@ -13,9 +12,6 @@ passport.deserializeUser(async function(id, done) {
   });
 });
 let permKeys = Object.keys(adperms.memberOf);
-let setMainUser = (user, message, cb) => {
-  cb(null, user, message);
-};
 permKeys.forEach(async (member) => {
   let roleNames = adperms.memberOf[member],
     roleIDs = [];
@@ -37,7 +33,7 @@ permKeys.forEach(async (member) => {
           await Aduser.findOrCreate({objectGuid: aduser.objectGuid}, aduser).then((user) => {
             user.isADAuth = true;
             Aduser.findOne({id: user.id}).populate('roles').then((user) => {
-              return setMainUser(user, {message: 'Login Successful'}, done);
+              done(null, user, {message: 'Login Successful'});
             }).catch(done);
           }).catch(done);
         });
