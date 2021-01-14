@@ -14,8 +14,7 @@ passport.deserializeUser(async function(id, done) {
 });
 let permKeys = Object.keys(adperms.memberOf);
 let setMainUser = (user, message, cb) => {
-  adUser = user;
-  cb(err, adUser, message);
+  cb(null, user, message);
 };
 permKeys.forEach(async (member) => {
   let roleNames = adperms.memberOf[member],
@@ -37,8 +36,8 @@ permKeys.forEach(async (member) => {
           };
           await Aduser.findOrCreate({objectGuid: aduser.objectGuid}, aduser).then((user) => {
             user.isADAuth = true;
-            await Aduser.findOne({id: user.id}).populate('roles').then((user) => {
-              return setMainUser(user, {message: 'Login Successful'});
+            Aduser.findOne({id: user.id}).populate('roles').then((user) => {
+              return setMainUser(user, {message: 'Login Successful'}, done);
             }).catch(done);
           }).catch(done);
         });
